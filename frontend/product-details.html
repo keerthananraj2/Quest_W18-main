@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+</head>
+<body>
+
+    <h2>Product Details</h2>
+    <div id="productDetails"></div>
+    <button id="placeOrderBtn">Place Order</button>
+
+    <script>
+        async function fetchProductDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get("id");
+
+            const response = await fetch(`http://localhost:5002/api/product/${productId}`);
+            const product = await response.json();
+
+            const container = document.getElementById("productDetails");
+            container.innerHTML = `
+                <h3>${product.commodity}</h3>
+                <p>Quantity: ${product.quantity} ${product.measurement}</p>
+                <p>Location: ${product.district}, ${product.state}</p>
+                <p>Address: ${product.address}</p>
+                ${product.photos.map(photo => `<img src="${photo}" width="200">`).join("")}
+            `;
+
+            document.getElementById("placeOrderBtn").addEventListener("click", () => {
+                window.location.href = `place-order.html?id=${product._id}`;
+            });
+        }
+
+        fetchProductDetails();
+    </script>
+
+</body>
+</html>

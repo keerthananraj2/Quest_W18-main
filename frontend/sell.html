@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sell Product</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+               
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+                background-image: url('vegies.jpg');
+                background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fdepositphotos.com%2Fphoto%2Ffresh-agricultural-products-150938662.html&psig=AOvVaw2Uw5wjkmH_RXdx8X1EPHAp&ust=1739712221342000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCJiri_TjxYsDFQAAAAAdAAAAABAE');
+            }
+    
+            h2 {
+                color: #28a745;
+                font-size: 24px;
+                margin-bottom: 20px;
+                
+            }
+    
+            form {
+                background: white;
+                max-width: 500px;
+                margin: auto;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                
+                gap: 12px;
+                
+            }
+    
+            label {
+                font-weight: bold;
+                text-align: left;
+            }
+    
+            input, select, textarea {
+                padding: 5px;
+                font-size: 16px;
+                border: 1px solid #ced4da;
+                border-radius: 5px;
+                width: 100%;
+            }
+    
+            input:focus, select:focus, textarea:focus {
+                outline: none;
+                border-color: #28a745;
+                box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+            }
+    
+            #previewImages {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+                justify-content: center;
+                background-image: url('vegies.jpg');
+            }
+    
+            .preview-img {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 5px;
+                border: 2px solid #28a745;
+                background-image: url('vegies.jpg');
+                transition: transform 0.3s ease-in-out;
+            }
+    
+            .preview-img:hover {
+                transform: scale(1.1);
+            }
+    
+            button {
+                padding: 12px;
+                background-color: #28a745;
+                color: white;
+                font-size: 18px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+                font-weight: bold;
+                transition: background-color 0.3s ease-in-out;
+            }
+    
+            button:hover {
+                background-color: #218838;
+            }
+    
+            button:active {
+                transform: scale(0.98);
+                background-image: url('vegies.jpg');
+            }
+        </style>
+    </head>
+    <body>
+    
+        <h2 class="sell">Sell Your Product</h2>
+    
+        <form id="sellForm">
+            <label for="sellerName">Seller Name:</label>
+            <input type="text" id="sellerName" name="sellerName" required>
+    
+            <!-- Seller Email -->
+            <label for="sellerEmail">Seller Email:</label>
+            <input type="email" id="sellerEmail" name="sellerEmail" required>
+    
+            <!-- Seller Phone Number -->
+            <label for="sellerPhone">Seller Phone Number:</label>
+            <input type="tel" id="sellerPhone" name="sellerPhone" required>
+            <!-- Commodity Name -->
+            <label for="commodity">Commodity Name:</label>
+            <input type="text" id="commodity" name="commodity" required>
+    
+            <!-- Quantity with Measurement -->
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" required>
+    
+            <label for="measurement">Measurement:</label>
+            <select id="measurement" name="measurement">
+                <option value="kg">Kg</option>
+                <option value="ton">Ton</option>
+                <option value="quintal">Quintal</option>
+            </select>
+         
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" required>
+    
+            <!-- State Selection -->
+            <label for="state">State:</label>
+            <select id="state" name="state" required>
+                <option value="">Select State</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Karnataka">Karnataka</option>
+                <!-- Add more states as needed -->
+            </select>
+    
+            <!-- District Selection -->
+            <label for="district">District:</label>
+            <select id="district" name="district" required>
+                <option value="">Select District</option>
+            </select>
+    
+            <!-- Upload Photos (Max 10) -->
+            <label for="photos">Upload Photos (Max 10):</label>
+            <input type="file" id="photos" name="photos" accept="image/*" multiple>
+            <div id="previewImages"></div>
+    
+            <!-- Address Field -->
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+    
+            <!-- Submit Button -->
+            <button type="submit">Add Product</button>
+        </form>
+    
+        <script>
+            const stateDistricts = {
+                "Maharashtra": ["Mumbai", "Pune", "Nagpur"],
+                "Gujarat": ["Ahmedabad", "Surat", "Vadodara"],
+                "Punjab": ["Ludhiana", "Amritsar", "Jalandhar"],
+                "Karnataka":["Mandya","Chikkamagaluru","Raichur"]
+            };
+        
+            // Update district dropdown when state changes
+            document.getElementById("state").addEventListener("change", function () {
+                const state = this.value;
+                const districtSelect = document.getElementById("district");
+                districtSelect.innerHTML = '<option value="">Select District</option>';
+                
+                if (stateDistricts[state]) {
+                    stateDistricts[state].forEach(district => {
+                        let option = document.createElement("option");
+                        option.value = district;
+                        option.textContent = district;
+                        districtSelect.appendChild(option);
+                    });
+                }
+            });
+        
+            // Handle image preview
+            document.getElementById("photos").addEventListener("change", function () {
+                const preview = document.getElementById("previewImages");
+                preview.innerHTML = ""; // Clear previous previews
+                const files = this.files;
+        
+                Array.from(files).forEach(file => {
+                    const img = document.createElement("img");
+                    img.classList.add("preview-img");
+                    img.src = URL.createObjectURL(file);
+                    img.style.width = "100px"; 
+                    img.style.margin = "5px";
+                    preview.appendChild(img);
+                });
+            });
+        
+            // Handle form submission
+            document.getElementById("sellForm").addEventListener("submit", async function (e) {
+                e.preventDefault();
+        
+                // Get form values
+                const sellerName = document.getElementById("sellerName").value.trim();
+            const sellerEmail = document.getElementById("sellerEmail").value.trim();
+            const sellerPhone = document.getElementById("sellerPhone").value.trim();
+                const commodity = document.getElementById("commodity").value.trim();
+                const quantity = document.getElementById("quantity").value.trim();
+                const measurement = document.getElementById("measurement").value;
+                const price = document.getElementById("price").value;
+                const state = document.getElementById("state").value;
+                const district = document.getElementById("district").value;
+                const address = document.getElementById("address").value.trim();
+                const photos = document.getElementById("photos").files;
+        
+                // Validate required fields
+                if (!commodity || !quantity || !measurement || !state || !district || !address) {
+                    alert("❌ All fields are required!");
+                    return;
+                }
+        
+                // Create FormData object
+                const formData = new FormData();
+                formData.append("sellerName", sellerName);
+            formData.append("sellerEmail", sellerEmail);
+            formData.append("sellerPhone", sellerPhone);
+                formData.append("commodity", commodity);
+                formData.append("quantity", quantity);
+                formData.append("measurement", measurement);
+                formData.append("price", price);
+                formData.append("state", state);
+                formData.append("district", district);
+                formData.append("address", address);
+        
+                // Append all selected photos (unlimited)
+                for (let i = 0; i < photos.length; i++) {
+                    formData.append("photos", photos[i]);
+                }
+        
+                try {
+                    const response = await fetch("http://localhost:5003/api/add-product", {
+                        method: "POST",
+                        body: formData
+                    });
+        
+                    const result = await response.json();
+        
+                    if (!response.ok) {
+                        throw new Error(result.message || "Error adding product");
+                    }
+        
+                    alert("✅ Product added successfully!");
+                    document.getElementById("sellForm").reset();
+                    document.getElementById("previewImages").innerHTML = ""; // Clear image preview
+                } catch (error) {
+                    alert(`❌ ${error.message}`);
+
+                }
+            });
+        </script>
+        
+    
+    </body>
+    </html>
+    
+</body>
+</html>

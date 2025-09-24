@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - Sales Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c7744;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        canvas {
+            width: 100% !important;
+            max-width: 350px;
+            height: 300px !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Seller Dashboard - Sales Analysis</h1>
+        <div class="chart-container">
+            <canvas id="yearlySalesChart"></canvas>
+            <canvas id="productSalesChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Year-wise Sales Data (Line Chart)
+        const yearlySalesData = {
+            labels: ["2019", "2020", "2021", "2022", "2023"],
+            datasets: [
+                {
+                    label: "Wheat (kgs)",
+                    data: [80, 100, 95, 120, 130],
+                    borderColor: "#ffcd56",
+                    backgroundColor: "rgba(255, 205, 86, 0.2)",
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: "Rice (kgs)",
+                    data: [90, 110, 105, 130, 140],
+                    borderColor: "#ff6384",
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: "Corn (kgs)",
+                    data: [70, 90, 85, 110, 120],
+                    borderColor: "#36a2eb",
+                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                    borderWidth: 2,
+                    fill: true
+                }
+            ]
+        };
+
+        // Product-wise Sales Data (Pie Chart)
+        const productSalesData = {
+            labels: ["Wheat", "Rice", "Corn", "Sugarcane", "Barley"],
+            datasets: [{
+                data: [250, 300, 180, 220, 150], // Example sales quantity in tons
+                backgroundColor: ["#ffcd56", "#ff6384", "#36a2eb", "#4bc0c0", "#9966ff"]
+            }]
+        };
+
+        // Create Yearly Sales Chart (Line)
+        const ctx1 = document.getElementById("yearlySalesChart").getContext("2d");
+        new Chart(ctx1, {
+            type: "line",
+            data: yearlySalesData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Create Product Sales Chart (Pie)
+        const ctx2 = document.getElementById("productSalesChart").getContext("2d");
+        new Chart(ctx2, {
+            type: "pie",
+            data: productSalesData,
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+
+</body>
+</html>

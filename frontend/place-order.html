@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order</title>
+    <style>
+    /* General styles */
+/* General Styles */
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+}
+
+/* Heading */
+h1 {
+    color: white;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Form Container */
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Label Styling */
+label {
+    font-weight: 500;
+    color: #555;
+    text-align: left;
+    width: 100%;
+}
+
+/* Input and Textarea Styles */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+    outline: none;
+}
+
+input:focus, textarea:focus {
+    border-color: #2a5298;
+}
+
+/* Button Styles */
+button {
+    background: #2a5298;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background: #1e3c72;
+}
+
+/* Response Message */
+#responseMessage {
+    margin-top: 15px;
+    font-weight: bold;
+    color: green;
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+</style>    
+</head>
+<body>
+
+    <h2>Place Your Order</h2>
+    <form id="orderForm">
+        <label>Name: <input type="text" id="name" required></label><br>
+        <label>Phone: <input type="text" id="phone" required></label><br>
+        <label>Quantity: <input type="number" id="quantity" required></label><br>
+        <label>Price per unit: <input type="number" id="price" required></label><br>
+        <label>Address: <input type="text" id="address" required></label><br>
+        <button type="submit">Submit Order</button>
+    </form>
+
+    <script>
+        document.getElementById("orderForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+
+            const orderData = {
+                name: document.getElementById("name").value.trim(),
+                phone: document.getElementById("phone").value.trim(),
+                quantity: parseInt(document.getElementById("quantity").value, 10),
+                price: parseFloat(document.getElementById("price").value),
+                address: document.getElementById("address").value.trim()
+            };
+
+            try {
+                const response = await fetch("http://localhost:5003/api/orders/place-order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+                alert(result.message);
+            } catch (error) {
+                alert("Network error. Please try again.");
+                console.error(error);
+            }
+        });
+    </script>
+
+</body>
+</html>
