@@ -1,4 +1,8 @@
 require("dotenv").config();
+require("dotenv").config({ path: "./config.env" });
+console.log("DEBUG MONGO_URI =", process.env.MONGO_URI);
+
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -25,6 +29,8 @@ const orderRoutes = require("./routes/orderRoutes");
 app.use("/api/orders", orderRoutes);
 
 // MongoDB Connection
+
+
 mongoose
     .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ MongoDB Connected Successfully"))
@@ -33,3 +39,5 @@ mongoose
 
 const PORT = process.env.PORT || 5003;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.use(require("./middleware/errorHandler"));
+

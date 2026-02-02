@@ -52,10 +52,41 @@ function addToCart(name, price) {
 
 // ✅ Function to display cart
 function displayCart() {
-    document.getElementById("cartItems").innerText = JSON.stringify(cart, null, 2);
+    const cartItemsDiv = document.getElementById("cartItems");
+    cartItemsDiv.innerHTML = "";
+
+    if (cart.length === 0) {
+        cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        cartItemsDiv.innerHTML += `
+            <div>
+                <h3>${item.commodity}</h3>
+                <p>₹${item.price}</p>
+                <button onclick="removeFromCart(${index})">Remove</button>
+            </div>
+            <hr>
+        `;
+    });
 }
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+}
+
 
 // ✅ Checkout
 function checkout() {
-    alert("✅ Order placed!");
+    if (cart.length === 0) {
+        alert("Cart is empty");
+        return;
+    }
+
+    const productId = cart[0].productId;
+
+    localStorage.removeItem("cart");
+    window.location.href = "place-order.html?id=" + productId;
 }

@@ -4,131 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Place Order</title>
+
     <style>
-    /* General styles */
-/* General Styles */
-/* General Styles */
-body {
-    font-family: 'Poppins', sans-serif;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    flex-direction: column;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background: #f0f2f5;
+        }
 
-/* Heading */
-h1 {
-    color: white;
-    font-size: 28px;
-    margin-bottom: 20px;
-    font-weight: 600;
-    text-align: center;
-}
+        h2 {
+            margin-bottom: 15px;
+            color: #2a5298;
+        }
 
-/* Form Container */
-.container {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    width: 400px;
-    text-align: center;
-}
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 400px;
+        }
 
-/* Form Styles */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-}
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-/* Label Styling */
-label {
-    font-weight: 500;
-    color: #555;
-    text-align: left;
-    width: 100%;
-}
+        label {
+            font-weight: 500;
+            color: #555;
+        }
 
-/* Input and Textarea Styles */
-input, textarea {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-    background-color: #f9f9f9;
-    transition: border-color 0.3s;
-    outline: none;
-}
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
 
-input:focus, textarea:focus {
-    border-color: #2a5298;
-}
+        input:focus {
+            border-color: #2a5298;
+            outline: none;
+        }
 
-/* Button Styles */
-button {
-    background: #2a5298;
-    color: white;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background 0.3s ease;
-    width: 100%;
-}
+        button {
+            background: #2a5298;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-button:hover {
-    background: #1e3c72;
-}
-
-/* Response Message */
-#responseMessage {
-    margin-top: 15px;
-    font-weight: bold;
-    color: green;
-    display: none;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-    .container {
-        width: 90%;
-        padding: 20px;
-    }
-}
-
-</style>    
+        button:hover {
+            background: #1e3c72;
+        }
+    </style>
 </head>
 <body>
 
-    <h2>Place Your Order</h2>
-    <form id="orderForm">
-        <label>Name: <input type="text" id="name" required></label><br>
-        <label>Phone: <input type="text" id="phone" required></label><br>
-        <label>Quantity: <input type="number" id="quantity" required></label><br>
-        <label>Price per unit: <input type="number" id="price" required></label><br>
-        <label>Address: <input type="text" id="address" required></label><br>
-        <button type="submit">Submit Order</button>
-    </form>
+    <div class="container">
+        <h2>Place Your Order</h2>
+
+        <form id="orderForm">
+            <label>Name:
+                <input type="text" id="name" required>
+            </label>
+
+            <label>Phone:
+                <input type="text" id="phone" required>
+            </label>
+
+            <label>Quantity:
+                <input type="number" id="quantity" min="1" required>
+            </label>
+
+            <label>Price per unit:
+                <input type="number" id="price" readonly required>
+            </label>
+
+            <label>Address:
+                <input type="text" id="address" required>
+            </label>
+
+            <button type="submit">Submit Order</button>
+        </form>
+    </div>
 
     <script>
-        document.getElementById("orderForm").addEventListener("submit", async function(e) {
-            e.preventDefault();
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("id");
 
+        // Load product price
+        async function loadProduct() {
+            if (!productId) {
+                alert("❌ No product selected");
+                return;
+            }
+
+            try {
+                const res = await fetch(`http://localhost:5003/api/product/${productId}`);
+                const product = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(product.message || "Product not found");
+                }
+
+                document.getElementById("price").value = product.price;
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        loadProduct();
+
+        // Submit order
+        document.getElementById("orderForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
             const orderData = {
-                name: document.getElementById("name").value.trim(),
-                phone: document.getElementById("phone").value.trim(),
-                quantity: parseInt(document.getElementById("quantity").value, 10),
-                price: parseFloat(document.getElementById("price").value),
-                address: document.getElementById("address").value.trim()
-            };
+    productId,
+    name: document.getElementById("name").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    quantity: parseInt(document.getElementById("quantity").value, 10),
+    address: document.getElementById("address").value.trim()
+};
+
+
 
             try {
                 const response = await fetch("http://localhost:5003/api/orders/place-order", {
@@ -138,10 +149,16 @@ button:hover {
                 });
 
                 const result = await response.json();
-                alert(result.message);
+
+                if (!response.ok) {
+                    throw new Error(result.message || "Order failed");
+                }
+
+                alert("✅ Order placed successfully!");
+                document.getElementById("orderForm").reset();
+
             } catch (error) {
-                alert("Network error. Please try again.");
-                console.error(error);
+                alert(`❌ ${error.message}`);
             }
         });
     </script>
